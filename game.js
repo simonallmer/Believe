@@ -333,8 +333,7 @@ document.querySelectorAll('.player-count-btn').forEach(btn => {
       const inputGroup = document.createElement('div');
       inputGroup.className = 'player-input-group';
       inputGroup.innerHTML = `
-  < label for= "player-${i}" > Player ${i}</label >
-    <input type="text" id="player-${i}" placeholder="Enter name" value="Player ${i}">
+        <input type="text" id="player-${i}" placeholder="Enter name" value="Player ${i}">
       `;
       inputsContainer.appendChild(inputGroup);
     }

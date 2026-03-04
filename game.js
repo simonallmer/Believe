@@ -286,8 +286,8 @@ document.getElementById('rules-btn').addEventListener('click', () => {
   showScreen('rules-screen');
 });
 
-document.getElementById('back-to-sa-btn').addEventListener('click', () => {
-  window.location.href = 'https://simonallmer.com';
+document.getElementById('back-to-arcade-btn').addEventListener('click', () => {
+  window.location.href = 'https://simonallmer.com/arcade';
 });
 
 // Rules Screen

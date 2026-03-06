@@ -57,11 +57,11 @@ const CARDS = [
   { id: 35, name: "Water", category: "Environment", examples: "" },
 
   // Continents (36-40)
-  { id: 36, name: "North America", category: "Continent", examples: "" },
-  { id: 37, name: "South America", category: "Continent", examples: "" },
-  { id: 38, name: "Europe", category: "Continent", examples: "" },
-  { id: 39, name: "Africa", category: "Continent", examples: "" },
-  { id: 40, name: "Asia-Pacific", category: "Continent", examples: "" },
+  { id: 36, name: "North America", category: "Continent", examples: "USA, Canada, Mexico" },
+  { id: 37, name: "South America", category: "Continent", examples: "Brazil, Argentina, Colombia" },
+  { id: 38, name: "Europe", category: "Continent", examples: "France, Germany, Italy" },
+  { id: 39, name: "Africa", category: "Continent", examples: "Egypt, South Africa, Nigeria" },
+  { id: 40, name: "Asia-Pacific", category: "Continent", examples: "China, Japan, Australia" },
 
   // Entertainment (41-45)
   { id: 41, name: "Film", category: "Entertainment", examples: "" },
@@ -137,7 +137,8 @@ let gameState = {
   playerVotes: {}, // { playerName: 'truth' or 'lie' } for classic, { playerName: cardIndex } for Hide The Lie
   deck: [...CARDS],
   pointGoal: 10,
-  gameMode: 'classic' // 'classic' or 'hide-the-lie'
+  gameMode: 'classic', // 'classic' or 'hide-the-lie'
+  storytellersUsedRedraw: [] // Track which storyteller indices have used their redraw
 };
 
 // === UTILITY FUNCTIONS ===
@@ -202,7 +203,36 @@ function createCardElement(card) {
     ${card.examples ? `<div class="card-examples">${card.examples}</div>` : '<div class="card-examples"></div>'}
   `;
 
+  // Add click listener for tips
+  if (card.examples) {
+    cardDiv.style.cursor = 'pointer';
+    cardDiv.addEventListener('click', (e) => {
+      // Prevent event bubbling if needed, but for now allow
+      showFloatingTip(cardDiv, card.examples);
+    });
+  }
+
   return cardDiv;
+}
+
+function showFloatingTip(cardElement, examples) {
+  const tip = document.createElement('div');
+  tip.className = 'card-tip';
+  tip.textContent = examples;
+
+  // Position it centered above the card
+  const rect = cardElement.getBoundingClientRect();
+  tip.style.left = (rect.left + rect.width / 2) + 'px';
+  tip.style.top = rect.top + 'px';
+
+  document.body.appendChild(tip);
+
+  // Remove after 2 seconds
+  setTimeout(() => {
+    if (tip.parentNode) {
+      document.body.removeChild(tip);
+    }
+  }, 2000);
 }
 
 function updateScoreboard(containerId) {
@@ -275,6 +305,102 @@ function startTimer(durationSeconds, displayId, barId, onComplete, onTick) {
   return interval;
 }
 
+// === WELCOME CARD ROTATION ===
+const cardRotation = {
+  cards: ['card-man.png', 'card-woman.png', 'card-child.png'],
+  shown: [],
+  currentIndex: 0,
+  rotationInterval: null,
+
+  init() {
+    this.resetCycle();
+    this.startRotation();
+    // Also allow manual cycling with clicks
+    const cardImg = document.getElementById('welcome-card-image');
+    if (cardImg) {
+      cardImg.addEventListener('click', () => this.nextCard());
+    }
+  },
+
+  resetCycle() {
+    this.shown = [];
+    this.shuffleCards();
+  },
+
+  shuffleCards() {
+    this.shown = [];
+    this.currentIndex = 0;
+  },
+
+  getNextCard() {
+    // Find cards that haven't been shown in this cycle
+    const unshown = this.cards.filter((_, index) => !this.shown.includes(index));
+    
+    if (unshown.length === 0) {
+      // All cards have been shown, reset cycle
+      this.resetCycle();
+      unshown = this.cards.filter((_, index) => !this.shown.includes(index));
+    }
+
+    // Pick random from unshown
+    const randomIndex = Math.floor(Math.random() * unshown.length);
+    const pickedIndex = this.cards.indexOf(unshown[randomIndex]);
+    
+    if (!this.shown.includes(pickedIndex)) {
+      this.shown.push(pickedIndex);
+    }
+    
+    return pickedIndex;
+  },
+
+  nextCard() {
+    const nextIndex = this.getNextCard();
+    this.displayCard(nextIndex);
+  },
+
+  displayCard(index) {
+    const cardImg = document.getElementById('welcome-card-image');
+    if (cardImg) {
+      // Fade out
+      cardImg.style.opacity = '0.5';
+      
+      // Change image and fade back in
+      setTimeout(() => {
+        cardImg.src = this.cards[index];
+        cardImg.style.opacity = '0.9';
+      }, 500);
+    }
+  },
+
+  startRotation() {
+    if (this.rotationInterval) clearInterval(this.rotationInterval);
+    
+    // Start with first random card
+    this.nextCard();
+    
+    // Change card every 10 seconds
+    this.rotationInterval = setInterval(() => {
+      this.nextCard();
+    }, 10000);
+  },
+
+  stopRotation() {
+    if (this.rotationInterval) {
+      clearInterval(this.rotationInterval);
+      this.rotationInterval = null;
+    }
+  }
+};
+
+// Initialize card rotation when page loads
+if (document.readyState === 'loading') {
+  document.addEventListener('DOMContentLoaded', () => {
+    cardRotation.init();
+  });
+} else {
+  cardRotation.init();
+}
+
 // === SCREEN HANDLERS ===
 
 // Welcome Screen
@@ -338,6 +464,16 @@ document.querySelectorAll('.player-count-btn').forEach(btn => {
       inputsContainer.appendChild(inputGroup);
     }
 
+    // Add event listeners to clear default names on focus
+    document.querySelectorAll('#player-inputs input').forEach((input, index) => {
+      const defaultName = `Player ${index + 1}`;
+      input.addEventListener('focus', () => {
+        if (input.value === defaultName) {
+          input.value = '';
+        }
+      });
+    });
+
     document.getElementById('player-inputs-container').classList.remove('hidden');
   });
 });
@@ -353,7 +489,7 @@ document.getElementById('start-round-btn').addEventListener('click', () => {
 
     // 2. Create Players Array
     gameState.players = Array.from(playerInputs).map((input, index) => {
-      const name = input.value.trim() || input.placeholder || `Player ${index + 1}`;
+      const name = input.value.trim() || `Player ${index + 1}`;
       return { name: name, score: 0 };
     });
 
@@ -466,6 +602,16 @@ document.getElementById('draw-cards-btn').addEventListener('click', () => {
   }
 
   showScreen('card-selection-screen');
+
+  // Update redraw button state
+  const redrawBtn = document.getElementById('draw-new-cards-btn');
+  if (gameState.storytellersUsedRedraw.includes(gameState.currentStorytellerIndex)) {
+    redrawBtn.disabled = true;
+    redrawBtn.textContent = 'Already Redrawn';
+  } else {
+    redrawBtn.disabled = false;
+    redrawBtn.textContent = 'Draw New Cards';
+  }
 });
 
 // Continue to Truth/Lie Selection or Start Storytelling
@@ -476,6 +622,55 @@ document.getElementById('choose-truth-lie-btn').addEventListener('click', () => 
     // Proceed directly to storytelling
     startStorytellingPhase();
   }
+});
+
+// Draw New Cards (once per storyteller per game)
+document.getElementById('draw-new-cards-btn').addEventListener('click', () => {
+  // Check if this storyteller has already used their redraw
+  if (gameState.storytellersUsedRedraw.includes(gameState.currentStorytellerIndex)) {
+    alert("You've already used your redraw for this game!");
+    return;
+  }
+
+  // Mark this storyteller as having used their redraw
+  gameState.storytellersUsedRedraw.push(gameState.currentStorytellerIndex);
+
+  // Redraw cards
+  gameState.drawnCards = drawCards(3);
+
+  const cardsContainer = document.getElementById('drawn-cards');
+  cardsContainer.innerHTML = '';
+
+  // Reset button state
+  const continueBtn = document.getElementById('choose-truth-lie-btn');
+  continueBtn.disabled = false;
+
+  if (gameState.gameMode === 'hide-the-lie') {
+    gameState.drawnCards.forEach((card, index) => {
+      const cardEl = createCardElement(card);
+      cardEl.style.cursor = 'pointer';
+      cardEl.dataset.cardIndex = index;
+
+      cardEl.addEventListener('click', () => {
+        cardsContainer.querySelectorAll('.card').forEach(c => c.classList.remove('selected-lie'));
+        cardEl.classList.add('selected-lie');
+        gameState.lieCardIndex = index;
+        continueBtn.disabled = false;
+      });
+
+      cardsContainer.appendChild(cardEl);
+    });
+  } else {
+    // Classic Mode
+    gameState.drawnCards.forEach(card => {
+      cardsContainer.appendChild(createCardElement(card));
+    });
+  }
+
+  // Disable the redraw button after use
+  const redrawBtn = document.getElementById('draw-new-cards-btn');
+  redrawBtn.disabled = true;
+  redrawBtn.textContent = 'Already Redrawn';
 });
 
 // Confirm Lie Selection (Hide The Lie Mode)
@@ -519,6 +714,13 @@ function startPreparationPhase() {
     if (choiceDisplay) {
       choiceDisplay.textContent = gameState.storytellerChoice === 'truth' ? 'TRUTH' : 'LIE';
     }
+
+    // Display cards during preparation
+    const prepCardsContainer = document.getElementById('preparation-cards');
+    prepCardsContainer.innerHTML = '';
+    gameState.drawnCards.forEach(card => {
+      prepCardsContainer.appendChild(createCardElement(card));
+    });
 
     showScreen('preparation-screen');
 
@@ -977,6 +1179,7 @@ if (playAgainBtn) {
       gameState.players.forEach(p => p.score = 0);
       gameState.currentStorytellerIndex = Math.floor(Math.random() * gameState.players.length);
       gameState.deck = shuffleArray([...CARDS]);
+      gameState.storytellersUsedRedraw = []; // Reset redraw tracking
 
       showScreen('welcome-screen');
     } catch (error) {
@@ -1055,10 +1258,32 @@ document.getElementById('options-end-game').addEventListener('click', () => {
     playerVotes: {},
     deck: [...CARDS],
     pointGoal: 10,
-    gameMode: 'classic' // Reset to default
+    gameMode: 'classic', // Reset to default
+    storytellersUsedRedraw: []
   };
 
   optionsModal.classList.add('hidden');
   hideOptionsButton();
   showScreen('welcome-screen');
+});
+
+// Back to Arcade from options
+document.getElementById('options-back-to-arcade').addEventListener('click', () => {
+  // Reset game state
+  gameState = {
+    players: [],
+    currentStorytellerIndex: 0,
+    currentRound: 1,
+    drawnCards: [],
+    storytellerChoice: null,
+    playerVotes: {},
+    deck: [...CARDS],
+    pointGoal: 10,
+    gameMode: 'classic',
+    storytellersUsedRedraw: []
+  };
+
+  optionsModal.classList.add('hidden');
+  hideOptionsButton();
+  window.location.href = 'https://simonallmer.com/arcade';
 });

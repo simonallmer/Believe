@@ -11,6 +11,11 @@
 </head>
 
 <body>
+  <!-- Demo Timer -->
+  <div id="demo-timer" class="demo-timer">
+    <span class="demo-label">DEMO</span>
+    <span id="demo-time-left">10:00</span>
+  </div>
 
   <!-- WELCOME SCREEN -->
   <div id="welcome-screen" class="screen active">
@@ -18,6 +23,7 @@
       <div style="text-align: center; margin-bottom: var(--spacing-lg);">
         <img id="welcome-card-image" src="card-man.png" alt="Story Card" style="max-width: 200px; height: auto; border-radius: var(--card-radius); box-shadow: var(--shadow-lg); opacity: 0.9; transition: opacity 1s ease; cursor: pointer;">
       </div>
+      <p class="demo-version-label text-center">DEMO VERSION</p>
       <h1 class="text-center mb-lg">
         BE<span class="text-red">LIE</span>VE
       </h1>
@@ -193,8 +199,8 @@
         <button class="player-count-btn" data-count="2">2</button>
         <button class="player-count-btn" data-count="3">3</button>
         <button class="player-count-btn" data-count="4">4</button>
-        <button class="player-count-btn" data-count="5">5</button>
-        <button class="player-count-btn" data-count="6">6</button>
+        <button class="player-count-btn restricted" data-count="5">5</button>
+        <button class="player-count-btn restricted" data-count="6">6</button>
       </div>
 
       <div id="player-inputs-container" class="player-inputs hidden">
@@ -669,6 +675,51 @@
   </div>
 
   <script src="game.js?v=2"></script>
+
+  <!-- Demo Modals -->
+  <!-- Demo Info Modal -->
+  <div id="demo-info-modal" class="modal hidden">
+    <div class="modal-content demo-modal">
+      <h2 class="arcade-title">ARCADE SUBSCRIPTION</h2>
+      <p class="arcade-text">Access Unlimited Play with an Arcade Subscription.</p>
+      <a href="https://simonallmer.com/aboutarcade" class="btn btn-primary" style="text-decoration: none; display: block; margin: 1rem 0;">LEARN MORE</a>
+      <button id="btn-close-demo-info" class="btn btn-secondary" style="width: 100%;">CLOSE</button>
+    </div>
+  </div>
+
+  <!-- Time Expired Modal -->
+  <div id="time-expired-modal" class="modal hidden">
+    <div class="modal-content demo-modal">
+      <h2 class="expired-title" style="margin-bottom: 1rem;">Your daily demo time has ended.</h2>
+      <p class="expired-text" style="color: var(--color-noir-silver); margin-bottom: 2rem;">Continue playing and unlock all features with an Arcade Subscription.</p>
+      <a href="https://simonallmer.com/arcade" class="btn btn-primary" style="text-decoration: none; display: block;">SUBSCRIBE</a>
+    </div>
+  </div>
+
+  <style>
+    /* Demo Modal styles if not in CSS */
+    .modal {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0,0,0,0.85);
+      backdrop-filter: blur(10px);
+      display: flex; align-items: center; justify-content: center;
+      z-index: 2000;
+    }
+    .modal.hidden { display: none; }
+    .modal-content {
+      background: var(--color-noir-charcoal);
+      padding: 2.5rem;
+      border-radius: 12px;
+      max-width: 450px;
+      width: 90%;
+      text-align: center;
+      border: 1px solid var(--color-noir-red);
+      box-shadow: var(--shadow-lg);
+    }
+    .arcade-title { color: var(--color-noir-red); letter-spacing: 2px; margin-bottom: 1rem; }
+    .arcade-text { color: var(--color-noir-silver); font-weight: 300; }
+  </style>
 </body>
 
 </html>

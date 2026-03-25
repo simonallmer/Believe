@@ -538,11 +538,6 @@ document.querySelector('#objects-mode-card button').addEventListener('click', ()
 // Setup Screen - Player Count Selection
 document.querySelectorAll('.player-count-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
-    // Check if button is restricted
-    if (btn.classList.contains('restricted')) {
-      document.getElementById('demo-info-modal')?.classList.remove('hidden');
-      return;
-    }
     document.querySelectorAll('.player-count-btn').forEach(b => b.classList.remove('selected'));
     e.target.classList.add('selected');
 
@@ -1320,44 +1315,29 @@ function hideOptionsButton() {
 
 function updateOptionsModal() {
   // Update current turn info
-  const storytellerEl = document.getElementById('options-storyteller');
-  const roundEl = document.getElementById('options-round');
-  const goalEl = document.getElementById('options-goal');
-
-  if (gameState.players && gameState.players.length > 0) {
-    const storyteller = getCurrentStoryteller();
-    storytellerEl.textContent = storyteller ? storyteller.name : "N/A";
-    roundEl.textContent = gameState.currentRound;
-  } else {
-    storytellerEl.textContent = "Wait for Setup";
-    roundEl.textContent = "-";
-  }
-  
-  goalEl.textContent = gameState.pointGoal;
+  document.getElementById('options-storyteller').textContent = getCurrentStoryteller().name;
+  document.getElementById('options-round').textContent = gameState.currentRound;
+  document.getElementById('options-goal').textContent = gameState.pointGoal;
 
   // Update scoreboard
   const optionsScores = document.getElementById('options-scores');
   optionsScores.innerHTML = '';
 
-  if (gameState.players && gameState.players.length > 0) {
-    gameState.players.forEach((player, index) => {
-      const scoreItem = document.createElement('div');
-      scoreItem.className = 'options-score-item';
+  gameState.players.forEach((player, index) => {
+    const scoreItem = document.createElement('div');
+    scoreItem.className = 'options-score-item';
 
-      if (index === gameState.currentStorytellerIndex) {
-        scoreItem.classList.add('active');
-      }
+    if (index === gameState.currentStorytellerIndex) {
+      scoreItem.classList.add('active');
+    }
 
-      scoreItem.innerHTML = `
-        <span>${player.name}</span>
-        <span>${player.score} pts</span>
-        `;
+    scoreItem.innerHTML = `
+      <span>${player.name}</span>
+      <span>${player.score} pts</span>
+      `;
 
-      optionsScores.appendChild(scoreItem);
-    });
-  } else {
-    optionsScores.innerHTML = '<p style="text-align:center; color:var(--color-noir-silver); opacity:0.6;">No players yet</p>';
-  }
+    optionsScores.appendChild(scoreItem);
+  });
 }
 
 // Options button click
@@ -2039,82 +2019,3 @@ document.getElementById('objects-play-again-btn').addEventListener('click', () =
   hideOptionsButton();
   showScreen('mode-selection-screen');
 });
-
-// --- Demo Manager ---
-const DemoManager = {
-  TIME_LIMIT: 600, // 10 minutes (in seconds)
-  STORAGE_KEY: 'believe_game_demo_state', // Change per game
-  timerInterval: null,
-  timeLeft: 600,
-
-  init() {
-    this.loadState();
-    this.startTimer();
-    this.updateDisplay();
-
-    // Event listeners
-    document.getElementById('demo-timer')?.addEventListener('click', () => {
-      document.getElementById('demo-info-modal')?.classList.remove('hidden');
-    });
-    document.getElementById('btn-close-demo-info')?.addEventListener('click', () => {
-      document.getElementById('demo-info-modal')?.classList.add('hidden');
-    });
-  },
-
-  loadState() {
-    const saved = localStorage.getItem(this.STORAGE_KEY);
-    const today = new Date().toLocaleDateString();
-    if (saved) {
-      const data = JSON.parse(saved);
-      this.timeLeft = data.lastUpdateDate === today ? data.timeLeft : this.TIME_LIMIT;
-    } else {
-      this.timeLeft = this.TIME_LIMIT;
-    }
-    this.saveState();
-  },
-
-  saveState() {
-    localStorage.setItem(this.STORAGE_KEY, JSON.stringify({
-      timeLeft: this.timeLeft,
-      lastUpdateDate: new Date().toLocaleDateString()
-    }));
-  },
-
-  startTimer() {
-    if (this.timerInterval) clearInterval(this.timerInterval);
-    this.timerInterval = setInterval(() => {
-      if (this.timeLeft > 0) {
-        this.timeLeft--;
-        this.updateDisplay();
-        if (this.timeLeft % 10 === 0) this.saveState();
-        if (this.timeLeft <= 0) this.onTimeExpired();
-      }
-    }, 1000);
-  },
-
-  updateDisplay() {
-    const mins = Math.floor(this.timeLeft / 60);
-    const secs = this.timeLeft % 60;
-    const el = document.getElementById('demo-time-left');
-    if (el) el.textContent = `${mins}:${secs.toString().padStart(2, '0')}`;
-  },
-
-  onTimeExpired() {
-    clearInterval(this.timerInterval);
-    this.saveState();
-    // Blur the app and show modal
-    document.getElementById('time-expired-modal')?.classList.remove('hidden');
-    // Hide options button to prevent escape
-    document.getElementById('options-button')?.classList.add('hidden');
-  }
-};
-
-// Initialize Demo
-if (document.readyState === 'loading') {
-  document.addEventListener('DOMContentLoaded', () => {
-    DemoManager.init();
-  });
-} else {
-  DemoManager.init();
-}
-

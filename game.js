@@ -118,6 +118,71 @@ const CARDS = [
   { id: 80, name: "Joker", category: "Joker", examples: "" }
 ];
 
+// === OBJECTS MODE CARDS ===
+const OBJECT_CARDS = [
+  // Scale & Dimensions (The "Tape Measure" Cards)
+  { id: 101, name: "Microscopic", category: "Scale", examples: "Bacteria, dust mites, atoms" },
+  { id: 102, name: "Pocket-sized", category: "Scale", examples: "Keys, phone, wallet" },
+  { id: 103, name: "Hand-sized", category: "Scale", examples: "Cup, book, remote" },
+  { id: 104, name: "Human-sized", category: "Scale", examples: "Door, chair, person" },
+  { id: 105, name: "Room-filling", category: "Scale", examples: "Bed, wardrobe, sofa" },
+  { id: 106, name: "Giant", category: "Scale", examples: "Building, ship, mountain" },
+  { id: 107, name: "Long/Thin", category: "Scale", examples: "Ruler, pole, noodle" },
+  { id: 108, name: "Flat", category: "Scale", examples: "Paper, leaf, credit card" },
+
+  // Physics & Material (The "Touch" Cards)
+  { id: 109, name: "Metallic", category: "Material", examples: "Coin, key, spoon" },
+  { id: 110, name: "Wooden", category: "Material", examples: "Chair, pencil, floor" },
+  { id: 111, name: "Gaseous", category: "Material", examples: "Smoke, steam, air" },
+  { id: 112, name: "Liquid", category: "Material", examples: "Water, oil, honey" },
+  { id: 113, name: "Transparent", category: "Material", examples: "Glass, water, diamond" },
+  { id: 114, name: "Reflective", category: "Material", examples: "Mirror, metal, lake" },
+  { id: 115, name: "Organic", category: "Material", examples: "Leather, bone, cotton" },
+  { id: 116, name: "Synthetic", category: "Material", examples: "Plastic, nylon, rubber" },
+  { id: 117, name: "Magnetic", category: "Material", examples: "Magnet, compass, iron" },
+  { id: 118, name: "Buoyant", category: "Material", examples: "Wood, rubber duck, boat" },
+  { id: 119, name: "Adhesive", category: "Material", examples: "Tape, glue, sticky note" },
+  { id: 120, name: "Elastic", category: "Material", examples: "Rubber band, balloon, spring" },
+
+  // Sensory & Temperature (The "Input" Cards)
+  { id: 121, name: "Freezing", category: "Temperature", examples: "Ice, snow, freezer" },
+  { id: 122, name: "Scolding", category: "Temperature", examples: "Boiling water, iron, fire" },
+  { id: 123, name: "Body-temp", category: "Temperature", examples: "Water, human, animal" },
+  { id: 124, name: "Luminous", category: "Temperature", examples: "Sun, lamp, firefly" },
+  { id: 125, name: "Pitch Black", category: "Temperature", examples: "Void, cave, pupil" },
+  { id: 126, name: "Silent", category: "Temperature", examples: " Feather, cloud, vacuum" },
+  { id: 127, name: "Deafening", category: "Temperature", examples: "Jet engine, siren, thunder" },
+  { id: 128, name: "Pungent", category: "Temperature", examples: "Onion, garbage, ammonia" },
+  { id: 129, name: "Spicy/Toxic", category: "Temperature", examples: "Chili, poison ivy, venom" },
+  { id: 130, name: "Textured/Rough", category: "Temperature", examples: "Sandpaper, rock, bark" },
+  { id: 131, name: "Slimy/Wet", category: "Temperature", examples: "Slug, mucus, oil" },
+  { id: 132, name: "Fuzzy/Hairy", category: "Temperature", examples: "Fur, wool, caterpillar" },
+
+  // Dynamic & State (The "Action" Cards)
+  { id: 133, name: "Stationary", category: "Dynamic", examples: "Rock, building, table" },
+  { id: 134, name: "Fast", category: "Dynamic", examples: "Car, bullet, jet" },
+  { id: 135, name: "Slow", category: "Dynamic", examples: "Snail, turtle, glacier" },
+  { id: 136, name: "Airborne", category: "Dynamic", examples: "Bird, plane, drone" },
+  { id: 137, name: "Submerged", category: "Dynamic", examples: "Fish, submarine, coral" },
+  { id: 138, name: "Spinning", category: "Dynamic", examples: "Wheel, fan, Earth" },
+  { id: 139, name: "Expanding", category: "Dynamic", examples: "Balloon, dough, universe" },
+  { id: 140, name: "Melting", category: "Dynamic", examples: "Ice cream, wax, butter" },
+  { id: 141, name: "Fragile", category: "Dynamic", examples: "Glass, egg, porcelain" },
+  { id: 142, name: "Indestructible", category: "Dynamic", examples: "Diamond, titanium, rock" },
+
+  // Origin & Context (The "Story" Cards)
+  { id: 143, name: "Mass-Produced", category: "Origin", examples: "Phone, chair, car" },
+  { id: 144, name: "Ancient", category: "Origin", examples: "Fossil, pyramid, scroll" },
+  { id: 145, name: "Edible", category: "Origin", examples: "Apple, bread, cheese" },
+  { id: 146, name: "Electronic", category: "Origin", examples: "Laptop, TV, phone" },
+  { id: 147, name: "Expensive", category: "Origin", examples: "Diamond, gold, mansion" },
+  { id: 148, name: "Valueless", category: "Origin", examples: "Trash, pebble, leaf" },
+  { id: 149, name: "Extraterrestrial", category: "Origin", examples: "Meteorite, satellite, astronaut" },
+  { id: 150, name: "Underground", category: "Origin", examples: "Mineral, root, tunnel" },
+  { id: 151, name: "Medical", category: "Origin", examples: "Syringe, bandage, pill" },
+  { id: 152, name: "Lethal", category: "Origin", examples: "Gun, poison, bomb" }
+];
+
 const POINT_GOALS = {
   2: 6,
   3: 8,
@@ -137,8 +202,14 @@ let gameState = {
   playerVotes: {}, // { playerName: 'truth' or 'lie' } for classic, { playerName: cardIndex } for Hide The Lie
   deck: [...CARDS],
   pointGoal: 10,
-  gameMode: 'classic', // 'classic' or 'hide-the-lie'
-  storytellersUsedRedraw: [] // Track which storyteller indices have used their redraw
+  gameMode: 'classic', // 'classic', 'hide-the-lie', or 'objects'
+  storytellersUsedRedraw: [], // Track which storyteller indices have used their redraw
+  // Objects mode specific:
+  objectCardsPlayed: [], // Cards played in current object round
+  currentPlayerClaimed: null, // 'knows' or 'false' or null
+  claimedObjectName: null, // The object name if someone claimed to know
+  objectsRoundHistory: [], // [{ cards: [], claimedObject: string, isValid: bool, caller: string, namer: string, points: number }]
+  falseCaller: null // The player who called FALSE in current round
 };
 
 // === UTILITY FUNCTIONS ===
@@ -172,23 +243,37 @@ function showScreen(screenId) {
     screen.classList.remove('active');
   });
   document.getElementById(screenId).classList.add('active');
+  
+  // Show options button on all screens except welcome screen
+  const optionsBtn = document.getElementById('options-button');
+  if (screenId === 'welcome-screen') {
+    optionsBtn.classList.add('hidden');
+  } else {
+    optionsBtn.classList.remove('hidden');
+  }
 }
 
 function showPrivacyOverlay(message, callback) {
   const overlay = document.getElementById('privacy-overlay');
   const messageEl = document.getElementById('privacy-message');
   const continueBtn = document.getElementById('privacy-continue-btn');
+  const optionsBtn = document.getElementById('options-button');
 
   messageEl.textContent = message;
   overlay.classList.remove('hidden');
+  
+  // Hide options button during privacy overlay
+  optionsBtn.classList.add('hidden');
 
   continueBtn.onclick = () => {
     overlay.classList.add('hidden');
+    // Show options button again after privacy overlay is dismissed
+    optionsBtn.classList.remove('hidden');
     callback();
   };
 }
 
-function createCardElement(card) {
+function createCardElement(card, showTip = true) {
   const cardDiv = document.createElement('div');
   cardDiv.className = card.category === 'Joker' ? 'card joker' : 'card';
 
@@ -203,8 +288,8 @@ function createCardElement(card) {
     ${card.examples ? `<div class="card-examples">${card.examples}</div>` : '<div class="card-examples"></div>'}
   `;
 
-  // Add click listener for tips
-  if (card.examples) {
+  // Add click listener for tips (only for non-Objects mode cards)
+  if (showTip && card.examples && gameState.gameMode !== 'objects') {
     cardDiv.style.cursor = 'pointer';
     cardDiv.addEventListener('click', (e) => {
       // Prevent event bubbling if needed, but for now allow
@@ -442,6 +527,14 @@ document.querySelector('#hide-lie-mode-card button').addEventListener('click', (
   showScreen('setup-screen');
 });
 
+// Objects Mode
+document.querySelector('#objects-mode-card button').addEventListener('click', () => {
+  gameState.gameMode = 'objects';
+  document.getElementById('setup-game-description').innerHTML =
+    '<strong>How to Play:</strong> Players take turns playing attribute cards to describe a real object. On your turn, either play a card OR claim to know the object and name it. If correct, you gain points equal to cards played. If wrong, you lose those points. The previous player can call False - if they\'re right, they gain 1 point. First to 10 points wins!';
+  showScreen('setup-screen');
+});
+
 // Setup Screen - Player Count Selection
 document.querySelectorAll('.player-count-btn').forEach(btn => {
   btn.addEventListener('click', (e) => {
@@ -497,20 +590,29 @@ document.getElementById('start-round-btn').addEventListener('click', () => {
       throw new Error("Need at least 2 players to start.");
     }
 
-    // 3. Initialize Deck
-    if (!CARDS || CARDS.length === 0) {
-      throw new Error("Card database is empty.");
+    // 3. Initialize Deck based on game mode
+    if (gameState.gameMode === 'objects') {
+      // Initialize Objects mode
+      gameState.deck = shuffleArray([...OBJECT_CARDS]);
+      gameState.pointGoal = 10; // Objects mode always 10 points
+      initObjectsMode();
+      startObjectsRound();
+    } else {
+      // Classic or Hide The Lie mode
+      if (!CARDS || CARDS.length === 0) {
+        throw new Error("Card database is empty.");
+      }
+      gameState.deck = shuffleArray([...CARDS]);
+
+      // 4. Initialize Storyteller
+      gameState.currentStorytellerIndex = Math.floor(Math.random() * gameState.players.length);
+
+      // 5. Initialize Round
+      gameState.currentRound = 1;
+
+      // 6. Start the Round
+      startRound();
     }
-    gameState.deck = shuffleArray([...CARDS]);
-
-    // 4. Initialize Storyteller
-    gameState.currentStorytellerIndex = Math.floor(Math.random() * gameState.players.length);
-
-    // 5. Initialize Round
-    gameState.currentRound = 1;
-
-    // 6. Start the Round
-    startRound();
 
   } catch (error) {
     console.error("CRITICAL ERROR starting game:", error);
@@ -542,7 +644,6 @@ function startRound() {
     if (storytellerNameEl) storytellerNameEl.textContent = storyteller.name;
 
     updateScoreboard('scoreboard-list');
-    showOptionsButton(); // Safe version
 
     // Show Privacy Overlay
     showPrivacyOverlay(
@@ -1180,6 +1281,14 @@ if (playAgainBtn) {
       gameState.currentStorytellerIndex = Math.floor(Math.random() * gameState.players.length);
       gameState.deck = shuffleArray([...CARDS]);
       gameState.storytellersUsedRedraw = []; // Reset redraw tracking
+      
+      // Reset Objects mode state
+      gameState.objectCardsPlayed = [];
+      gameState.currentPlayerClaimed = null;
+      gameState.claimedObjectName = null;
+      objectsDeck = [];
+      playerHands = {};
+      objectsCurrentPlayerIndex = 0;
 
       showScreen('welcome-screen');
     } catch (error) {
@@ -1259,8 +1368,16 @@ document.getElementById('options-end-game').addEventListener('click', () => {
     deck: [...CARDS],
     pointGoal: 10,
     gameMode: 'classic', // Reset to default
-    storytellersUsedRedraw: []
+    storytellersUsedRedraw: [],
+    objectCardsPlayed: [],
+    currentPlayerClaimed: null,
+    claimedObjectName: null
   };
+
+  // Reset Objects mode state
+  objectsDeck = [];
+  playerHands = {};
+  objectsCurrentPlayerIndex = 0;
 
   optionsModal.classList.add('hidden');
   hideOptionsButton();
@@ -1280,10 +1397,625 @@ document.getElementById('options-back-to-arcade').addEventListener('click', () =
     deck: [...CARDS],
     pointGoal: 10,
     gameMode: 'classic',
-    storytellersUsedRedraw: []
+    storytellersUsedRedraw: [],
+    objectCardsPlayed: [],
+    currentPlayerClaimed: null,
+    claimedObjectName: null
   };
+
+  // Reset Objects mode state
+  objectsDeck = [];
+  playerHands = {};
+  objectsCurrentPlayerIndex = 0;
 
   optionsModal.classList.add('hidden');
   hideOptionsButton();
   window.location.href = 'https://simonallmer.com/arcade';
+});
+
+// ==========================================
+// OBJECTS MODE GAME LOGIC
+// ==========================================
+
+let objectsDeck = [];
+let playerHands = {}; // { playerName: [cards] }
+let objectsCurrentPlayerIndex = 0;
+
+function initObjectsMode() {
+  // Initialize objects deck
+  objectsDeck = shuffleArray([...OBJECT_CARDS]);
+  
+  // Reset game state for objects mode
+  gameState.objectCardsPlayed = [];
+  gameState.currentPlayerClaimed = null;
+  gameState.claimedObjectName = null;
+  gameState.objectsRoundHistory = [];
+  objectsCurrentPlayerIndex = 0;
+  
+  // Deal 3 cards to each player
+  playerHands = {};
+  gameState.players.forEach(player => {
+    playerHands[player.name] = drawObjectCards(3);
+  });
+  
+  // Reset scores to 0 for new game
+  gameState.players.forEach(p => p.score = 0);
+  
+  // Set point goal to 10 for Objects mode
+  gameState.pointGoal = 10;
+}
+
+function drawObjectCards(count) {
+  if (objectsDeck.length < count) {
+    objectsDeck = shuffleArray([...OBJECT_CARDS]);
+  }
+  return objectsDeck.splice(0, count);
+}
+
+function startObjectsRound() {
+  // Reset for new round
+  gameState.objectCardsPlayed = [];
+  gameState.currentPlayerClaimed = null;
+  gameState.claimedObjectName = null;
+  gameState.falseCaller = null;
+  objectsCurrentPlayerIndex = 0;
+  
+  // Redraw cards for all players (up to 3 each)
+  gameState.players.forEach(player => {
+    const currentHandSize = playerHands[player.name] ? playerHands[player.name].length : 0;
+    const cardsNeeded = 3 - currentHandSize;
+    if (cardsNeeded > 0) {
+      playerHands[player.name] = playerHands[player.name] || [];
+      const newCards = drawObjectCards(cardsNeeded);
+      playerHands[player.name].push(...newCards);
+    }
+  });
+  
+  updateObjectsTurnScreen();
+  
+  // Show privacy overlay to pass device
+  const currentPlayer = getObjectsCurrentPlayer();
+  showPrivacyOverlay(
+    `Pass the device to ${currentPlayer.name}.`,
+    () => showScreen('objects-turn-screen')
+  );
+}
+
+function getObjectsCurrentPlayer() {
+  return gameState.players[objectsCurrentPlayerIndex];
+}
+
+function getObjectsPreviousPlayer() {
+  const prevIndex = (objectsCurrentPlayerIndex - 1 + gameState.players.length) % gameState.players.length;
+  return gameState.players[prevIndex];
+}
+
+function updateObjectsTurnScreen() {
+  const currentPlayer = getObjectsCurrentPlayer();
+  const hand = playerHands[currentPlayer.name];
+  const hasCards = hand.length > 0;
+  const totalCardsInDeck = objectsDeck.length + hand.length + gameState.objectCardsPlayed.length;
+  
+  // Update info
+  document.getElementById('objects-round-num').textContent = gameState.currentRound;
+  document.getElementById('objects-card-num').textContent = gameState.objectCardsPlayed.length + 1;
+  document.getElementById('objects-current-player').textContent = currentPlayer.name;
+  document.getElementById('objects-played-count').textContent = gameState.objectCardsPlayed.length;
+  document.getElementById('objects-point-goal').textContent = gameState.pointGoal;
+  
+  // Show played cards
+  const playedCardsContainer = document.getElementById('objects-played-cards');
+  playedCardsContainer.innerHTML = '';
+  if (gameState.objectCardsPlayed.length === 0) {
+    playedCardsContainer.innerHTML = '<p style="color: var(--color-noir-silver); text-align: center;">No cards played yet</p>';
+  } else {
+    gameState.objectCardsPlayed.forEach(card => {
+      playedCardsContainer.appendChild(createCardElement(card, false));
+    });
+  }
+  
+  // Show hand cards
+  const handContainer = document.getElementById('objects-hand-cards');
+  handContainer.innerHTML = '';
+  
+  if (!hasCards && totalCardsInDeck === 0) {
+    // All cards used - last player must name object or call FALSE
+    handContainer.innerHTML = '<p style="color: var(--color-noir-red); text-align: center;">No cards left! You must call FALSE or name an object.</p>';
+  } else {
+    hand.forEach((card, index) => {
+      const cardEl = createCardElement(card, false);
+      cardEl.style.cursor = 'pointer';
+      cardEl.dataset.cardIndex = index;
+      cardEl.addEventListener('click', () => {
+        playObjectCard(index);
+      });
+      handContainer.appendChild(cardEl);
+    });
+  }
+  
+  // Update scoreboard
+  updateObjectsScoreboard('objects-scoreboard-list');
+  
+  // Disable Call FALSE button if no cards played in current round
+  const falseBtn = document.getElementById('objects-call-false-btn');
+  if (gameState.objectCardsPlayed.length === 0) {
+    falseBtn.disabled = true;
+    falseBtn.style.opacity = '0.5';
+  } else {
+    falseBtn.disabled = false;
+    falseBtn.style.opacity = '1';
+  }
+}
+
+// Play a card from hand
+function playObjectCard(cardIndex) {
+  const currentPlayer = getObjectsCurrentPlayer();
+  const hand = playerHands[currentPlayer.name];
+  
+  // Remove card from hand and add to played (NO refilling - only refill after round ends)
+  const card = hand.splice(cardIndex, 1)[0];
+  gameState.objectCardsPlayed.push(card);
+  
+  // Move to next player
+  objectsCurrentPlayerIndex = (objectsCurrentPlayerIndex + 1) % gameState.players.length;
+  
+  // Check if ALL players have no cards left (all cards used up - rare case)
+  const allPlayersOutOfCards = gameState.players.every(p => {
+    const pHand = playerHands[p.name];
+    return !pHand || pHand.length === 0;
+  });
+  
+  if (allPlayersOutOfCards) {
+    // All cards used! Last player must name an object
+    const lastPlayer = getObjectsCurrentPlayer();
+    
+    showPrivacyOverlay(
+      `All cards used! Pass to ${lastPlayer.name} to name an object or call FALSE.`,
+      () => {
+        document.getElementById('claim-know-card-count').textContent = gameState.objectCardsPlayed.length;
+        
+        const cardsContainer = document.getElementById('claim-know-cards');
+        cardsContainer.innerHTML = '';
+        gameState.objectCardsPlayed.forEach(card => {
+          cardsContainer.appendChild(createCardElement(card, false));
+        });
+        
+        document.getElementById('objects-object-input').value = '';
+        document.getElementById('objects-object-input').placeholder = "All cards used! Enter the object name...";
+        showScreen('objects-claim-know-screen');
+      }
+    );
+    return;
+  }
+  
+  updateObjectsTurnScreen();
+  
+  // Show privacy overlay for next player (if they have cards)
+  const nextPlayer = getObjectsCurrentPlayer();
+  const nextHand = playerHands[nextPlayer.name];
+  if (nextHand && nextHand.length > 0) {
+    showPrivacyOverlay(
+      `Pass the device to ${nextPlayer.name}.`,
+      () => showScreen('objects-turn-screen')
+    );
+  } else {
+    // Next player has no cards - skip to next one who has cards
+    let attempts = 0;
+    while (attempts < gameState.players.length) {
+      objectsCurrentPlayerIndex = (objectsCurrentPlayerIndex + 1) % gameState.players.length;
+      const checkPlayer = getObjectsCurrentPlayer();
+      const checkHand = playerHands[checkPlayer.name];
+      if (checkHand && checkHand.length > 0) break;
+      attempts++;
+    }
+    updateObjectsTurnScreen();
+    const skipPlayer = getObjectsCurrentPlayer();
+    showPrivacyOverlay(
+      `Pass the device to ${skipPlayer.name}.`,
+      () => showScreen('objects-turn-screen')
+    );
+  }
+}
+
+// Show Call False screen
+function showCallFalseScreen() {
+  const previousPlayer = getObjectsPreviousPlayer();
+  
+  document.getElementById('call-false-prev-player').textContent = previousPlayer.name;
+  
+  const cardsContainer = document.getElementById('call-false-cards');
+  cardsContainer.innerHTML = '';
+  if (gameState.objectCardsPlayed.length === 0) {
+    cardsContainer.innerHTML = '<p style="color: var(--color-noir-silver);">No cards played in this round yet.</p>';
+  } else {
+    gameState.objectCardsPlayed.forEach(card => {
+      cardsContainer.appendChild(createCardElement(card, false));
+    });
+  }
+  
+  showScreen('objects-call-false-screen');
+}
+
+// Confirm FALSE call - now passes device to previous player to name object
+document.getElementById('objects-false-confirm-btn').addEventListener('click', () => {
+  const currentPlayer = getObjectsCurrentPlayer();
+  const previousPlayer = getObjectsPreviousPlayer();
+  
+  // Store who called false for scoring
+  gameState.currentPlayerClaimed = 'false';
+  gameState.falseCaller = currentPlayer.name;
+  
+  // Pass device to previous player to enter object name
+  showPrivacyOverlay(
+    `Pass the device to ${previousPlayer.name} to name the object.`,
+    () => {
+      document.getElementById('claim-know-card-count').textContent = gameState.objectCardsPlayed.length;
+      
+      const cardsContainer = document.getElementById('claim-know-cards');
+      cardsContainer.innerHTML = '';
+      gameState.objectCardsPlayed.forEach(card => {
+        cardsContainer.appendChild(createCardElement(card, false));
+      });
+      
+      document.getElementById('objects-object-input').value = '';
+      document.getElementById('objects-object-input').placeholder = "Enter the object name you're thinking of...";
+      showScreen('objects-claim-know-screen');
+    }
+  );
+});
+
+// Cancel FALSE call
+document.getElementById('objects-false-cancel-btn').addEventListener('click', () => {
+  updateObjectsTurnScreen();
+  showScreen('objects-turn-screen');
+});
+
+// Submit answer for object (called after FALSE or when all cards used)
+document.getElementById('objects-submit-answer-btn').addEventListener('click', () => {
+  const answer = document.getElementById('objects-object-input').value.trim();
+  if (!answer) {
+    alert('Please enter an object name!');
+    return;
+  }
+  
+  gameState.claimedObjectName = answer;
+  gameState.currentPlayerClaimed = 'knows';
+  
+  // Check if this is the "all cards used" case (no FALSE caller)
+  // In that case, we don't have a falseCaller
+  const hasFalseCaller = gameState.falseCaller && gameState.falseCaller.length > 0;
+  
+  if (!hasFalseCaller) {
+    // All cards used scenario - just show verification screen
+    // We'll handle scoring differently based on verification
+    document.getElementById('verified-object-name').textContent = answer;
+    
+    const verificationCards = document.getElementById('verification-cards');
+    verificationCards.innerHTML = '';
+    gameState.objectCardsPlayed.forEach(card => {
+      verificationCards.appendChild(createCardElement(card, false));
+    });
+    
+    showScreen('objects-verification-screen');
+    return;
+  }
+  
+  // Normal FALSE call scenario - proceed to verification
+  document.getElementById('verified-object-name').textContent = answer;
+  
+  const verificationCards = document.getElementById('verification-cards');
+  verificationCards.innerHTML = '';
+  gameState.objectCardsPlayed.forEach(card => {
+    verificationCards.appendChild(createCardElement(card, false));
+  });
+  
+  showScreen('objects-verification-screen');
+});
+
+// Verify answer - Object is VALID
+document.getElementById('objects-verify-true-btn').addEventListener('click', () => {
+  const previousPlayer = getObjectsPreviousPlayer(); // The one who named the object
+  const cardCount = gameState.objectCardsPlayed.length;
+  
+  // Check if there was a FALSE caller
+  const hasFalseCaller = gameState.falseCaller && gameState.falseCaller.length > 0;
+  
+  if (hasFalseCaller) {
+    // Normal FALSE call scenario
+    const currentPlayer = getObjectsCurrentPlayer(); // The one who called FALSE
+    
+    // Previous player (who claimed to know) wins: gains N points
+    previousPlayer.score += cardCount;
+    
+    // FALSE caller loses 1 point
+    currentPlayer.score -= 1;
+    
+    // Record in history
+    gameState.objectsRoundHistory.push({
+      cards: [...gameState.objectCardsPlayed],
+      claimedObject: gameState.claimedObjectName,
+      isValid: true,
+      caller: currentPlayer.name,
+      namer: previousPlayer.name,
+      points: cardCount,
+      noCaller: false
+    });
+    
+    // Show results
+    showObjectsResults(true, 
+      `${previousPlayer.name} correctly identified the object!`, 
+      `${previousPlayer.name} gains +${cardCount} points, ${currentPlayer.name} loses -1 point`);
+  } else {
+    // All cards used case - no FALSE caller
+    // Only the namer gains points, no one loses
+    previousPlayer.score += cardCount;
+    
+    // Record in history
+    gameState.objectsRoundHistory.push({
+      cards: [...gameState.objectCardsPlayed],
+      claimedObject: gameState.claimedObjectName,
+      isValid: true,
+      caller: null,
+      namer: previousPlayer.name,
+      points: cardCount,
+      noCaller: true
+    });
+    
+    // Show results
+    showObjectsResults(true, 
+      `${previousPlayer.name} correctly identified the object (all cards used)!`, 
+      `${previousPlayer.name} gains +${cardCount} points`);
+  }
+});
+
+// Verify answer - Object is FALSE
+document.getElementById('objects-verify-false-btn').addEventListener('click', () => {
+  const previousPlayer = getObjectsPreviousPlayer(); // The one who named the object
+  const cardCount = gameState.objectCardsPlayed.length;
+  
+  // Check if there was a FALSE caller
+  const hasFalseCaller = gameState.falseCaller && gameState.falseCaller.length > 0;
+  
+  if (hasFalseCaller) {
+    // Normal FALSE call scenario
+    const currentPlayer = getObjectsCurrentPlayer(); // The one who called FALSE
+    
+    // Previous player (who claimed to know) loses: loses N points
+    previousPlayer.score -= cardCount;
+    
+    // FALSE caller gains 1 point
+    currentPlayer.score += 1;
+    
+    // Record in history
+    gameState.objectsRoundHistory.push({
+      cards: [...gameState.objectCardsPlayed],
+      claimedObject: gameState.claimedObjectName,
+      isValid: false,
+      caller: currentPlayer.name,
+      namer: previousPlayer.name,
+      points: -cardCount,
+      noCaller: false
+    });
+    
+    // Show results
+    showObjectsResults(false, 
+      `${previousPlayer.name}'s object was FALSE!`,
+      `${previousPlayer.name} loses ${cardCount} points, ${currentPlayer.name} gains +1 point`);
+  } else {
+    // All cards used case - no FALSE caller
+    // No points change (since no one called false and was wrong)
+    // Record in history
+    gameState.objectsRoundHistory.push({
+      cards: [...gameState.objectCardsPlayed],
+      claimedObject: gameState.claimedObjectName,
+      isValid: false,
+      caller: null,
+      namer: previousPlayer.name,
+      points: 0,
+      noCaller: true
+    });
+    
+    // Show results
+    showObjectsResults(false, 
+      `${previousPlayer.name}'s object was FALSE (all cards used)!`,
+      `No points changed (no one called FALSE)`);
+  }
+});
+
+// Show Objects results
+function showObjectsResults(success, resultTitle, scoringDetails) {
+  const resultEl = document.getElementById('objects-result-text');
+  resultEl.textContent = success ? '✓ OBJECT VERIFIED' : '✗ OBJECT REJECTED';
+  resultEl.className = `reveal-result ${success ? 'truth' : 'lie'}`;
+  
+  // Show cards
+  const cardsContainer = document.getElementById('objects-result-cards');
+  cardsContainer.innerHTML = '';
+  gameState.objectCardsPlayed.forEach(card => {
+    cardsContainer.appendChild(createCardElement(card, false));
+  });
+  
+  // Show claimed object
+  const claimedText = document.getElementById('objects-claimed-object-text');
+  claimedText.innerHTML = `<strong>Claimed Object:</strong> <span class="text-red">${gameState.claimedObjectName}</span>`;
+  
+  // Show scoring details
+  const scoringEl = document.getElementById('objects-scoring-details');
+  scoringEl.innerHTML = `<p>${scoringDetails}</p>`;
+  
+  // Update scoreboard
+  document.getElementById('objects-results-goal').textContent = gameState.pointGoal;
+  updateObjectsScoreboard('objects-results-scoreboard');
+  
+  // Check for winner
+  const winner = gameState.players.find(p => p.score >= gameState.pointGoal);
+  if (winner) {
+    document.getElementById('objects-next-round-btn').classList.add('hidden');
+    document.getElementById('objects-end-game-btn').classList.remove('hidden');
+  } else {
+    document.getElementById('objects-next-round-btn').classList.remove('hidden');
+    document.getElementById('objects-end-game-btn').classList.add('hidden');
+  }
+  
+  showScreen('objects-results-screen');
+}
+
+function updateObjectsScoreboard(containerId) {
+  const container = document.getElementById(containerId);
+  container.innerHTML = '';
+  
+  gameState.players.forEach((player, index) => {
+    const scoreItem = document.createElement('div');
+    scoreItem.className = 'score-item';
+    
+    if (index === objectsCurrentPlayerIndex) {
+      scoreItem.classList.add('current-storyteller');
+    }
+    
+    scoreItem.innerHTML = `
+      <span class="player-name">${player.name}</span>
+      <span class="player-score">${player.score}</span>
+    `;
+    
+    container.appendChild(scoreItem);
+  });
+}
+
+// Objects mode button handlers
+document.getElementById('objects-play-card-btn').addEventListener('click', () => {
+  // Play first card from hand automatically (or could show selection)
+  const currentPlayer = getObjectsCurrentPlayer();
+  const hand = playerHands[currentPlayer.name];
+  if (hand && hand.length > 0) {
+    playObjectCard(0);
+  } else {
+    // No cards - must call FALSE instead
+    alert('You have no cards left! You must call FALSE.');
+    showCallFalseScreen();
+  }
+});
+
+document.getElementById('objects-call-false-btn').addEventListener('click', () => {
+  // Must have at least one card played to call false
+  if (gameState.objectCardsPlayed.length === 0) {
+    alert('At least one card must be played before calling FALSE!');
+    return;
+  }
+  showCallFalseScreen();
+});
+
+// Objects next round
+document.getElementById('objects-next-round-btn').addEventListener('click', () => {
+  gameState.currentRound++;
+  startObjectsRound();
+});
+
+// Objects end game - show final results with all rounds history
+document.getElementById('objects-end-game-btn').addEventListener('click', () => {
+  showObjectsFinalResults();
+});
+
+function showObjectsFinalResults() {
+  // Sort players by score (descending)
+  const sortedPlayers = [...gameState.players].sort((a, b) => b.score - a.score);
+
+  const finalScoreboardEl = document.getElementById('objects-final-scoreboard-list');
+  finalScoreboardEl.innerHTML = '';
+
+  sortedPlayers.forEach((player, index) => {
+    const scoreItem = document.createElement('div');
+    scoreItem.className = 'score-item';
+
+    if (index === 0) {
+      scoreItem.classList.add('winner');
+    }
+
+    scoreItem.innerHTML = `
+      <span class="player-name">
+        ${index === 0 ? '👑 ' : `${index + 1}. `}${player.name}
+      </span>
+      <span class="player-score">${player.score}</span>
+    `;
+
+    finalScoreboardEl.appendChild(scoreItem);
+  });
+
+  // Show history
+  const historyContainer = document.getElementById('objects-history-container');
+  historyContainer.innerHTML = '';
+
+  if (gameState.objectsRoundHistory.length === 0) {
+    historyContainer.innerHTML = '<p style="text-align: center; color: var(--color-noir-silver);">No rounds played.</p>';
+  } else {
+    gameState.objectsRoundHistory.forEach((round, index) => {
+      const roundDiv = document.createElement('div');
+      roundDiv.className = 'game-info';
+      roundDiv.style.marginBottom = 'var(--spacing-md)';
+      
+      // Create cards HTML
+      let cardsHtml = '<div class="card-grid" style="grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap: var(--spacing-sm);">';
+      round.cards.forEach(card => {
+        cardsHtml += `
+          <div class="card" style="width: 150px; height: 200px; padding: var(--spacing-sm);">
+            <div class="card-category" style="font-size: 0.65rem;">${card.category}</div>
+            <div class="card-title" style="font-size: 1rem;">${card.name}</div>
+          </div>
+        `;
+      });
+      cardsHtml += '</div>';
+
+      const objectColor = round.isValid ? 'var(--color-noir-white)' : 'var(--color-noir-red)';
+      const objectLabel = round.isValid ? '✓ VERIFIED' : '✗ FALSE';
+      
+      // Handle no caller case (all cards used)
+      const callerText = round.noCaller ? 'No caller (all cards used)' : `Caller: ${round.caller}`;
+      
+      roundDiv.innerHTML = `
+        <h3 style="margin-bottom: var(--spacing-sm);">Round ${index + 1}</h3>
+        <p style="margin-bottom: var(--spacing-xs);">
+          ${callerText} | 
+          <strong>Namer:</strong> ${round.namer}
+        </p>
+        <p style="margin-bottom: var(--spacing-sm);">
+          <strong>Object:</strong> <span style="color: ${objectColor}; font-weight: bold;">${round.claimedObject}</span>
+          <span style="color: ${objectColor}; margin-left: var(--spacing-sm);">${objectLabel}</span>
+        </p>
+        ${cardsHtml}
+      `;
+      
+      historyContainer.appendChild(roundDiv);
+    });
+  }
+
+  showScreen('objects-final-screen');
+}
+
+// Play Again handler for Objects mode
+document.getElementById('objects-play-again-btn').addEventListener('click', () => {
+  // Reset to mode selection
+  // Reset game state
+  gameState = {
+    players: [],
+    currentStorytellerIndex: 0,
+    currentRound: 1,
+    drawnCards: [],
+    storytellerChoice: null,
+    playerVotes: {},
+    deck: [...CARDS],
+    pointGoal: 10,
+    gameMode: 'classic',
+    storytellersUsedRedraw: [],
+    objectCardsPlayed: [],
+    currentPlayerClaimed: null,
+    claimedObjectName: null,
+    objectsRoundHistory: []
+  };
+
+  // Reset Objects mode state
+  objectsDeck = [];
+  playerHands = {};
+  objectsCurrentPlayerIndex = 0;
+
+  hideOptionsButton();
+  showScreen('mode-selection-screen');
 });

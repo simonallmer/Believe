@@ -54,11 +54,11 @@
       <h2 class="text-center mb-lg">Choose Game Mode</h2>
 
       <div
-        style="display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: var(--spacing-lg); max-width: 900px; margin: 0 auto;">
+        style="display: grid; grid-template-columns: repeat(3, 1fr); gap: var(--spacing-lg); max-width: 1000px; margin: 0 auto;">
 
         <!-- Classic Mode -->
         <div class="game-mode-card" id="classic-mode-card">
-          <h3 class="text-red">Classic Mode</h3>
+          <h3 class="text-red">Classic</h3>
           <p class="mb-md">Tell one extraordinary story based on 3 cards. Will it be truth or lie?</p>
           <ul
             style="text-align: left; color: var(--color-noir-silver); font-size: 0.9rem; margin-bottom: var(--spacing-md);">
@@ -82,6 +82,20 @@
             <li>Others guess which story is false</li>
           </ul>
           <button class="btn btn-primary" style="width: 100%;">Play Hide The Lie</button>
+        </div>
+
+        <!-- Objects Mode -->
+        <div class="game-mode-card" id="objects-mode-card">
+          <h3 class="text-red">Objects</h3>
+          <p class="mb-md">Describe real objects using attribute cards. Claim to know the object or call False!</p>
+          <ul
+            style="text-align: left; color: var(--color-noir-silver); font-size: 0.9rem; margin-bottom: var(--spacing-md);">
+            <li>Draw 3 cards</li>
+            <li>Play cards to describe an object</li>
+            <li>Claim to know or call False</li>
+            <li>First to 10 points wins</li>
+          </ul>
+          <button class="btn btn-primary" style="width: 100%;">Play Objects</button>
         </div>
 
       </div>
@@ -435,6 +449,182 @@
     <h2 class="mb-md">Pass the Device</h2>
     <p id="privacy-message">Pass the device to the storyteller.</p>
     <button id="privacy-continue-btn" class="btn btn-primary btn-large">I'm Ready</button>
+  </div>
+
+  <!-- OBJECTS MODE - PLAYER TURN SCREEN -->
+  <div id="objects-turn-screen" class="screen">
+    <div class="container">
+      <h2 class="text-center mb-md">Objects Mode</h2>
+      <p class="text-center mb-lg" style="color: var(--color-noir-silver);">
+        Round <span id="objects-round-num">1</span> - Card <span id="objects-card-num">1</span>
+      </p>
+
+      <div class="game-info mb-xl">
+        <p><strong>Current Player:</strong> <span id="objects-current-player" class="text-red"></span></p>
+        <p><strong>Cards Played:</strong> <span id="objects-played-count">0</span></p>
+        <p><strong>Score Goal:</strong> <span id="objects-point-goal">10</span> points</p>
+      </div>
+
+      <div id="objects-played-cards" class="card-grid mb-xl"></div>
+
+      <div class="game-info mb-xl">
+        <p><strong>Your Hand (3 cards):</strong></p>
+      </div>
+      <div id="objects-hand-cards" class="card-grid mb-xl"></div>
+
+      <div style="text-align: center; display: flex; gap: var(--spacing-lg); justify-content: center; flex-wrap: wrap;">
+        <button id="objects-play-card-btn" class="btn btn-secondary btn-large">Play a Card</button>
+        <button id="objects-call-false-btn" class="btn btn-primary btn-large" style="background: var(--color-noir-red);">Call FALSE</button>
+      </div>
+
+      <div class="scoreboard mt-xl">
+        <div class="scoreboard-header">
+          <h3>Scoreboard</h3>
+        </div>
+        <div id="objects-scoreboard-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECTS MODE - CLAIM KNOW INPUT SCREEN -->
+  <div id="objects-claim-know-screen" class="screen">
+    <div class="container">
+      <h2 class="text-center mb-md">Name the Object!</h2>
+      <p class="text-center mb-lg" style="color: var(--color-noir-silver);">
+        Based on the <span id="claim-know-card-count">0</span> cards played, what real object are you thinking of?
+      </p>
+
+      <div id="claim-know-cards" class="card-grid mb-xl"></div>
+
+      <div class="game-info mb-xl">
+        <p><strong>Your Answer:</strong></p>
+        <input type="text" id="objects-object-input" 
+          style="width: 100%; padding: var(--spacing-md); background: var(--color-noir-gray); border: 2px solid var(--color-noir-red); border-radius: 8px; color: var(--color-noir-white); font-size: 1.25rem; text-align: center;"
+          placeholder="Enter object name...">
+      </div>
+
+      <div style="text-align: center;">
+        <button id="objects-submit-answer-btn" class="btn btn-primary btn-large">Submit Answer</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECTS MODE - VERIFICATION SCREEN -->
+  <div id="objects-verification-screen" class="screen">
+    <div class="container">
+      <h2 class="text-center mb-md">Verification</h2>
+      <p class="text-center mb-lg" style="color: var(--color-noir-silver);">
+        The claimed object must pass the 30-Second Search test and benchmarks!
+      </p>
+
+      <div class="game-info mb-xl">
+        <h3 class="mb-md">Claimed Object: <span id="verified-object-name" class="text-red"></span></h3>
+        <p><strong>Cards Played:</strong></p>
+        <div id="verification-cards" class="card-grid mb-md"></div>
+      </div>
+
+      <div class="game-info mb-xl">
+        <h3>Benchmarks Check:</h3>
+        <ul style="list-style: none; padding: 0;">
+          <li style="margin: var(--spacing-sm) 0;">✦ Pocket-sized: Fits in a trouser pocket</li>
+          <li style="margin: var(--spacing-sm) 0;">✦ Human-sized: 1.5m−2m tall</li>
+          <li style="margin: var(--spacing-sm) 0;">✦ Freezing: 0°C or lower</li>
+          <li style="margin: var(--spacing-sm) 0;">✦ Scolding: 60°C or higher</li>
+        </ul>
+        <p style="margin-top: var(--spacing-md); font-style: italic; font-size: 0.9rem;">
+          Use a search engine to verify. If group is split, the active player loses the tie!
+        </p>
+      </div>
+
+      <div style="text-align: center; display: flex; gap: var(--spacing-lg); justify-content: center; flex-wrap: wrap;">
+        <button id="objects-verify-true-btn" class="btn btn-primary btn-large">Object is VALID ✓</button>
+        <button id="objects-verify-false-btn" class="btn btn-primary btn-large" style="background: var(--color-noir-red);">Object is FALSE ✗</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECTS MODE - CALL FALSE SCREEN -->
+  <div id="objects-call-false-screen" class="screen">
+    <div class="container">
+      <h2 class="text-center mb-md">Call FALSE!</h2>
+      <p class="text-center mb-lg" style="color: var(--color-noir-silver);">
+        You believe the previous player does NOT have a real object in mind!
+      </p>
+
+      <div class="game-info mb-xl">
+        <p><strong>Previous Player:</strong> <span id="call-false-prev-player"></span></p>
+        <p><strong>Cards Played:</strong></p>
+        <div id="call-false-cards" class="card-grid mb-md"></div>
+      </div>
+
+      <div style="text-align: center; display: flex; gap: var(--spacing-lg); justify-content: center; flex-wrap: wrap;">
+        <button id="objects-false-confirm-btn" class="btn btn-primary btn-large">Confirm FALSE Call</button>
+        <button id="objects-false-cancel-btn" class="btn btn-secondary btn-large">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECTS MODE - RESULTS SCREEN -->
+  <div id="objects-results-screen" class="screen">
+    <div class="container">
+      <h2 class="text-center mb-md">Objects Results</h2>
+
+      <div class="reveal-container mb-xl">
+        <div id="objects-result-text" class="reveal-result"></div>
+      </div>
+
+      <div class="game-info mb-xl">
+        <h3 class="mb-md">Cards Played</h3>
+        <div id="objects-result-cards" class="card-grid mb-md"></div>
+        <p id="objects-claimed-object-text" style="font-size: 1.1rem;"></p>
+      </div>
+
+      <div class="game-info mb-xl">
+        <h3 class="mb-md">Scoring</h3>
+        <div id="objects-scoring-details"></div>
+      </div>
+
+      <div class="scoreboard mb-xl">
+        <div class="scoreboard-header">
+          <h3>Updated Scores</h3>
+          <p>Goal: <span id="objects-results-goal" class="text-red">10</span> points</p>
+        </div>
+        <div id="objects-results-scoreboard"></div>
+      </div>
+
+      <div style="text-align: center; margin-top: var(--spacing-xl);">
+        <button id="objects-next-round-btn" class="btn btn-primary btn-large">Next Round</button>
+        <button id="objects-end-game-btn" class="btn btn-primary btn-large hidden">View Final Results</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- OBJECTS MODE - FINAL RESULTS SCREEN -->
+  <div id="objects-final-screen" class="screen">
+    <div class="container">
+      <h1 class="text-center mb-lg">
+        Game <span class="text-red">Over</span>
+      </h1>
+
+      <div class="scoreboard mb-xl">
+        <div class="scoreboard-header">
+          <h2>Final Standings</h2>
+        </div>
+        <div id="objects-final-scoreboard-list"></div>
+      </div>
+
+      <div class="game-info mb-xl">
+        <h2 class="text-center mb-md">All Rounds History</h2>
+        <p class="text-center mb-lg" style="color: var(--color-noir-silver);">
+          Green = Verified Object, Red = False or Unnamed
+        </p>
+        <div id="objects-history-container"></div>
+      </div>
+
+      <div style="text-align: center; margin-top: var(--spacing-xl);">
+        <button id="objects-play-again-btn" class="btn btn-primary btn-large">Play Again</button>
+      </div>
+    </div>
   </div>
 
   <!-- OPTIONS BUTTON (shown during gameplay) -->
